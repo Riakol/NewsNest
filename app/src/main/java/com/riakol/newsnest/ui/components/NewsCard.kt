@@ -31,7 +31,7 @@ fun NewsCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { onArticleClick(news.url) },
+            .clickable { onArticleClick(news.id) },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {

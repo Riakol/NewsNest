@@ -34,4 +34,25 @@ class NewsRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override suspend fun getArticleById(
+        apiKey: String,
+        articleId: String
+    ): Result<NewsItem> {
+        return try {
+            val response = apiService.getArticleById(
+                url = articleId,
+                apiKey = apiKey,
+
+                showFields = "body,thumbnail,trailText"
+            )
+            if (response.response.status != "ok") {
+                return Result.failure(RuntimeException("Article not found or API error"))
+            }
+            val article = response.response.content.toDomainModel()
+            Result.success(article)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

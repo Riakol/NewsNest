@@ -8,4 +8,9 @@ interface NewsRepository {
         section: String? = null,
         query: String? = null
     ): Result<List<NewsItem>>
+
+    suspend fun getArticleById(
+        apiKey: String,
+        articleId: String
+    ): Result<NewsItem>
 }

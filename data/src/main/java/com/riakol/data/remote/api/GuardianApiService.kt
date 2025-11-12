@@ -1,8 +1,10 @@
 package com.riakol.data.remote.api
 
 import com.riakol.data.remote.dto.GuardianApiResponse
+import com.riakol.data.remote.dto.GuardianDetailApiResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface GuardianApiService {
     @GET("search")
@@ -14,4 +16,11 @@ interface GuardianApiService {
         @Query("show-fields") showFields: String = "headline,trailText,thumbnail",
         @Query("order-by") orderBy: String = "newest"
     ): GuardianApiResponse
+
+    @GET
+    suspend fun getArticleById(
+        @Url url: String,
+        @Query("api-key") apiKey: String,
+        @Query("show-fields") showFields: String = "body"
+    ): GuardianDetailApiResponse
 }

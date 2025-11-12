@@ -10,5 +10,8 @@ data class ArticleFields(
     val trailText: String? = null,
 
     @SerializedName("thumbnail")
-    val thumbnail: String? = null
+    val thumbnail: String? = null,
+
+    @SerializedName("body")
+    val body: String? = null
 )
