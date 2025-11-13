@@ -10,6 +10,10 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 sealed class NewsUiState {
@@ -26,22 +30,87 @@ class NewsFeedViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<NewsUiState>(NewsUiState.Loading)
     val uiState: StateFlow<NewsUiState> = _uiState.asStateFlow()
 
+    val topics = listOf(
+        "politics",
+        "environment",
+        "society",
+        "education",
+        "media",
+        "film",
+        "culture",
+        "books",
+        "music",
+        "travel",
+        "life and style",
+        "football",
+        "cricket",
+        "tennis",
+        "opinion",
+        "guardian view",
+        "obituaries",
+        "features"
+    )
+
+    private val _selectedTopic = MutableStateFlow<String?>(topics.first())
+    val selectedTopic: StateFlow<String?> = _selectedTopic.asStateFlow()
+
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+
     init {
-        loadNews(section = "world")
+        loadNews(section = _selectedTopic.value)
+
+        _searchQuery
+            .debounce(500L)
+            .distinctUntilChanged()
+            .onEach { query ->
+                if (query.length > 2) {
+                    loadNews(section = null, query = query)
+                } else if (query.isEmpty() && _selectedTopic.value == null) {
+                    onTopicChange(topics.first())
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
-    fun loadNews(section: String? = null, query: String? = null) {
+    /**
+     * Called when the user inputs text into the search bar.
+     */
+    fun onSearchQueryChange(query: String) {
+        _searchQuery.value = query
+        if (query.isNotEmpty()) {
+            _selectedTopic.value = null
+        }
+    }
+
+    /**
+     * Called when the user clicks on a topic chip.
+     */
+    fun onTopicChange(topic: String) {
+        _selectedTopic.value = topic
+        _searchQuery.value = ""
+        loadNews(section = topic, query = null)
+    }
+
+    /**
+     * Private method for loading news.
+     * It ensures that either 'section' or 'query' will be used at the same time, but not both.
+     */
+    private fun loadNews(section: String? = null, query: String? = null) {
         viewModelScope.launch {
             _uiState.value = NewsUiState.Loading
 
+            val effectiveQuery = query?.takeIf { it.isNotBlank() }
+            val effectiveSection = section?.takeIf { it.isNotBlank() }
+
             getNewsUseCase(
                 apiKey = ApiConfig.GUARDIAN_API_KEY,
-                section = section,
-                query = query
+                section = effectiveSection,
+                query = effectiveQuery
             ).onSuccess { newsList ->
                 _uiState.value = NewsUiState.Success(newsList)
             }.onFailure { exception ->
-                _uiState.value = NewsUiState.Error(exception.message ?: "Не удалось загрузить новости")
+                _uiState.value = NewsUiState.Error(exception.message ?: "Failed to load news.")
             }
         }
     }
