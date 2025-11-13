@@ -66,15 +66,17 @@ class NewsFeedViewModel @Inject constructor(
             .onEach { query ->
                 if (query.length > 2) {
                     loadNews(section = null, query = query)
-                } else if (query.isEmpty() && _selectedTopic.value == null) {
-                    onTopicChange(topics.first())
+                } else if (query.isEmpty()) {
+                    if (_selectedTopic.value == null) {
+                        onTopicChange(topics.first())
+                    }
                 }
             }
             .launchIn(viewModelScope)
     }
 
     /**
-     * Called when the user inputs text into the search bar.
+     * It is triggered when text is entered into the search bar.
      */
     fun onSearchQueryChange(query: String) {
         _searchQuery.value = query
@@ -84,7 +86,7 @@ class NewsFeedViewModel @Inject constructor(
     }
 
     /**
-     * Called when the user clicks on a topic chip.
+     * It is triggered when clicking on the topic chip.
      */
     fun onTopicChange(topic: String) {
         _selectedTopic.value = topic
@@ -93,8 +95,18 @@ class NewsFeedViewModel @Inject constructor(
     }
 
     /**
+     * It is triggered when the "Search" button is pressed on the keyboard.
+     */
+    fun onSearchSubmit() {
+        val query = _searchQuery.value
+        if (query.length > 2) {
+            loadNews(section = null, query = query)
+        }
+    }
+
+
+    /**
      * Private method for loading news.
-     * It ensures that either 'section' or 'query' will be used at the same time, but not both.
      */
     private fun loadNews(section: String? = null, query: String? = null) {
         viewModelScope.launch {
@@ -102,6 +114,10 @@ class NewsFeedViewModel @Inject constructor(
 
             val effectiveQuery = query?.takeIf { it.isNotBlank() }
             val effectiveSection = section?.takeIf { it.isNotBlank() }
+
+            if (effectiveQuery == null && effectiveSection == null) {
+                _uiState.value = NewsUiState.Error("Invalid request: no section or query.")
+            }
 
             getNewsUseCase(
                 apiKey = ApiConfig.GUARDIAN_API_KEY,

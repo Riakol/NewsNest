@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 fun NewsTopAppBar(
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
+    onSearchSubmit: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
@@ -70,6 +71,7 @@ fun NewsTopAppBar(
                 keyboardActions = KeyboardActions(
                     onSearch = {
                         focusManager.clearFocus()
+                        onSearchSubmit()
                     }
                 ),
                 trailingIcon = {

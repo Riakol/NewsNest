@@ -30,6 +30,8 @@ import androidx.navigation.NavHostController
 import com.riakol.newsnest.ui.navigation.BottomNavigationBar
 import com.riakol.newsnest.viewmodel.NewsFeedViewModel
 import com.riakol.newsnest.viewmodel.NewsUiState
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun NewsFeedScreen(
@@ -45,7 +47,8 @@ fun NewsFeedScreen(
         topBar = {
             NewsTopAppBar(
                 searchQuery = searchQuery,
-                onSearchQueryChange = viewModel::onSearchQueryChange
+                onSearchQueryChange = viewModel::onSearchQueryChange,
+                onSearchSubmit = viewModel::onSearchSubmit
             )
         },
         bottomBar = {
@@ -88,7 +91,10 @@ fun NewsFeedScreen(
                                     NewsCard(
                                         news = article,
                                         onArticleClick = { id ->
-                                            val encodedId = id.replace("/", "~")
+                                            val encodedId = URLEncoder.encode(
+                                                id,
+                                                StandardCharsets.UTF_8.toString()
+                                            )
                                             navController.navigate("article/$encodedId")
                                         }
                                     )
