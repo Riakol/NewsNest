@@ -12,6 +12,7 @@ interface GuardianApiService {
         @Query("api-key") apiKey: String,
         @Query("section") section: String? = null,
         @Query("q") query: String? = null,
+        @Query("query-fields") queryFields: String? = null,
         @Query("page-size") pageSize: Int = 10,
         @Query("show-fields") showFields: String = "headline,trailText,thumbnail",
         @Query("order-by") orderBy: String = "newest"

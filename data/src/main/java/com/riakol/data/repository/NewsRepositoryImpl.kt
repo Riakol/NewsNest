@@ -20,6 +20,7 @@ class NewsRepositoryImpl @Inject constructor(
                 apiKey = apiKey,
                 section = section,
                 query = query,
+                queryFields = if (query != null) "headline" else null,
                 pageSize = 20,
                 showFields = "headline,trailText,thumbnail"
             )
