@@ -1,5 +1,7 @@
 package com.riakol.newsnest.ui.components
 
+import android.os.Build
+import android.text.Html
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +13,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -71,8 +74,21 @@ fun NewsCard(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
+                val plainTrailText = remember(news.trailText) {
+                    if (news.trailText.isNullOrEmpty()) {
+                        ""
+                    } else {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            Html.fromHtml(news.trailText, Html.FROM_HTML_MODE_COMPACT).toString()
+                        } else {
+                            @Suppress("DEPRECATION")
+                            Html.fromHtml(news.trailText).toString()
+                        }
+                    }
+                }
+
                 Text(
-                    text = news.trailText.orEmpty(),
+                    text = plainTrailText,
                     fontSize = 14.sp,
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis
