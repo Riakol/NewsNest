@@ -2,6 +2,12 @@
 
 NewsNest is a modern Android news application built entirely with Kotlin and Jetpack Compose. It demonstrates a clean, scalable architecture and leverages the latest Android development technologies to fetch and display news from The Guardian API.
 
+<p align="center">
+    <img width="300" style="margin: 10px;" alt="image1" src="https://github.com/user-attachments/assets/4a058b3c-d924-48c1-a35f-fe66d8b7a2c1" />
+    <img width="300" style="margin: 10px;" alt="image2" src="https://github.com/user-attachments/assets/aec0a622-6953-4744-8751-f90b560b4f8f" />
+    <img width="300" style="margin: 10px;" alt="image3" src="https://github.com/user-attachments/assets/c0fdfcca-0864-49fb-8cb2-6aa883ac1748" />
+</p>
+
 ## Features
 
 *   **Dynamic News Feed**: Browse the latest articles in a clean, scrollable list.
