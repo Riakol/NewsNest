@@ -146,13 +146,10 @@ fun ArticleScreen(
     }
 }
 
-/**
- * Вспомогательная функция для форматирования даты
- */
 private fun formatDisplayDate(isoDate: String): String {
     return try {
         val zonedDateTime = ZonedDateTime.parse(isoDate)
-        // Форматируем в локализованный вид, например "12 ноября 2023 г."
+        // Format in a localized way, for example, "November 12, 2023."
         val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG)
             .withLocale(Locale("ru", "RU"))
         zonedDateTime.toLocalDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(Locale("ru", "RU")))
@@ -161,9 +158,6 @@ private fun formatDisplayDate(isoDate: String): String {
     }
 }
 
-/**
- * Composable-обертка для WebView
- */
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 private fun ArticleWebView(htmlBody: String) {
@@ -191,10 +185,6 @@ private fun ArticleWebView(htmlBody: String) {
     )
 }
 
-
-/**
- * Вспомогательная функция для добавления CSS-стилей к HTML
- */
 private fun getStyledHtml(body: String, isDark: Boolean): String {
     val textColor = if (isDark) "#E0E0E0" else "#121212"
     val linkColor = if (isDark) "#82B1FF" else "#0056D3"
@@ -215,7 +205,7 @@ private fun getStyledHtml(body: String, isDark: Boolean): String {
                     font-size: 1.1em; 
                 }
                 p {
-                    margin-bottom: 1em; /* Отступ между параграфами */
+                    margin-bottom: 1em; 
                 }
                 a {
                     color: $linkColor;
@@ -224,7 +214,7 @@ private fun getStyledHtml(body: String, isDark: Boolean): String {
                 img, figure, video {
                     max-width: 100%;
                     height: auto;
-                    border-radius: 8px; /* Скругляем углы у изображений в статье */
+                    border-radius: 8px; 
                 }
             </style>
         </head>

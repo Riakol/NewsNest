@@ -75,9 +75,6 @@ class NewsFeedViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    /**
-     * It is triggered when text is entered into the search bar.
-     */
     fun onSearchQueryChange(query: String) {
         _searchQuery.value = query
         if (query.isNotEmpty()) {
@@ -85,18 +82,12 @@ class NewsFeedViewModel @Inject constructor(
         }
     }
 
-    /**
-     * It is triggered when clicking on the topic chip.
-     */
     fun onTopicChange(topic: String) {
         _selectedTopic.value = topic
         _searchQuery.value = ""
         loadNews(section = topic, query = null)
     }
 
-    /**
-     * It is triggered when the "Search" button is pressed on the keyboard.
-     */
     fun onSearchSubmit() {
         val query = _searchQuery.value
         if (query.length > 2) {
@@ -105,9 +96,6 @@ class NewsFeedViewModel @Inject constructor(
     }
 
 
-    /**
-     * Private method for loading news.
-     */
     private fun loadNews(section: String? = null, query: String? = null) {
         viewModelScope.launch {
             _uiState.value = NewsUiState.Loading
