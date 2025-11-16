@@ -149,7 +149,6 @@ fun ArticleScreen(
 private fun formatDisplayDate(isoDate: String): String {
     return try {
         val zonedDateTime = ZonedDateTime.parse(isoDate)
-        // Format in a localized way, for example, "November 12, 2023."
         val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG)
             .withLocale(Locale("ru", "RU"))
         zonedDateTime.toLocalDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(Locale("ru", "RU")))
